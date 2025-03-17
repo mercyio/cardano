@@ -1,9 +1,13 @@
-# hng-0
-Hire Skilled Developers - https://hng.tech/hire/nodejs-developers
 
-# HNG Stage 0 API
+---
 
-A simple REST API that returns personal information including email, current datetime, and GitHub repository URL.
+# NestJs Project
+
+[![StartEase](https://img.shields.io/badge/Generated%20by-StartEase-blue)](https://github.com/JC-Coder/startease)
+
+## Overview
+
+Welcome to your project generated using StartEase! This guide will walk you through the basic configuration steps to get your backend project up and running.
 
 ## Prerequisites
 
@@ -17,24 +21,6 @@ Install project dependencies using npm :
    ```bash
    npm install
    ```
-
-### Local Development Setup
-Clone the repository: 
-  ```bash
-   `git clone https://github.com/mercyio/hng-0.git`
-   ```
-
-
-Navigate to project directory:
-  ```bash
-    `cd stage-0`
-   ```
-
-
-Install dependencies: 
- ```bash
-    `npm install`
-   ```
 OR
 
 Install project dependencies using yarn :
@@ -42,52 +28,32 @@ Install project dependencies using yarn :
 yarn install
 ```
 
+## Configuration
+
+### Environment Variables
+
+Your project relies on environment variables for configuration. To set up these variables:
+
+1. Create a `.env` file in the project root directory.
+
+2. Add the following environment variables to the `.env` file:
+
+   ```plaintext
+   APP_NAME=YourAppName
+   APP_PORT=3000
+   APP_ENV=development
+   ```
+   Note: configuration variables should be added based on config in the environment.js file.
+
+
+Replace `YourAppName`, `your-database-url`, `your-database-name`, etc., with your actual project and database information.
+
 ### Start the Project
 
-Once you've done your installation setup, you can start your project:
+Once you've configured your environment variables, you can start your project:
 
-```bash 
+```bash
 npm run start:dev
 ```
-Your backend server should now be running.
 
-
-## API Documentation
-
-### Endpoint
-Production: GET/ https://hng-0-xrzm.onrender.com
-Local: GET/ http://localhost:3000
-
-### Base URL
-The API will be running at:
-Production: https://hng-0-xrzm.onrender.com
-Local: http://localhost:3000
-
-### Example Request 
-Using Browser
-local: Simply visit http://localhost:3000 in your web browser
-or
-production: https://hng-0-xrzm.onrender.com/
-
-Using cURL
-curl http://localhost:3000
-
-Using Postman
-Open Postman
-Create a new GET request
-Enter URL: http://localhost:3000 or  https://hng-0-xrzm.onrender.com/
-Make sure your code is running if you are using the localhost url
-Click Send
-View the JSON response
-
-
-### Example Response
-
-```json
-{
-    "email": "mercydanke@gmail.com",
-    "current_datetime": "2023-09-08T12:34:56Z",
-    "github_url": "https://github.com/mercyio/hng-0"
-}
-
-
+Your backend server should now be running at http://localhost:<specified-port>.

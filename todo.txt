@@ -1,0 +1,3 @@
+campaign category
+find all campaigns and filter payment type 
+filter  category when finding all campaigns
