@@ -1,3 +1,5 @@
 campaign category
 find all campaigns and filter payment type 
 filter  category when finding all campaigns
+contribution amount should update campaign current amount
+compare password and forgot password

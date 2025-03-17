@@ -24,12 +24,19 @@ export class UserService {
     role?: UserRoleEnum,
   ): Promise<UserDocument> {
     try {
+      const { password, confirmPassword } = payload;
       const userWithEmailExists = await this.userModel.exists({
         email: payload.email,
       });
 
       if (userWithEmailExists) {
         throw new BadRequestException('User with this email already exists');
+      }
+
+      if (password !== confirmPassword) {
+        throw new BadRequestException(
+          'Password and confirm password do not match',
+        );
       }
 
       const hashedPassword = await BaseHelper.hashData(payload.password);
