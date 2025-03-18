@@ -1,6 +1,6 @@
 import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, UpdateQuery } from 'mongoose';
 import { Campaign, CampaignDocument } from './schema/campaign.schema';
 import { RepositoryService } from '../repository/repository.service';
 import { CreateCampaignDto } from './dto/campaign.dto';
@@ -34,5 +34,18 @@ export class CampaignService {
 
   async singleCampaign(campaignId: string) {
     return await this.campaignModel.findById(campaignId);
+  }
+
+  async update(
+    campaignId: string,
+    payload: UpdateQuery<CampaignDocument>,
+  ): Promise<CampaignDocument> {
+    return await this.campaignModel.findOneAndUpdate(
+      { _id: campaignId },
+      payload,
+      {
+        new: true,
+      },
+    );
   }
 }

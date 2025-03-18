@@ -30,9 +30,14 @@ export class ContributorService {
         'this name is  an  existing contributor for this campaign',
       );
     }
-    return await this.contributorModel.create(payload);
-  }
+    const contribution = await this.contributorModel.create(payload);
 
+    await this.campaignService.update(payload.campaign, {
+      $inc: { currentAmount: payload.amount },
+    });
+
+    return contribution;
+  }
   async retrieveContributorsByCampaignId(_id: string) {
     const campaign = await this.campaignService.singleCampaign(_id);
 

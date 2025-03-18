@@ -5,6 +5,8 @@ import { RepositoryModule } from './module/v1/repository/repository.module';
 import { DatabaseModule } from './module/v1/database/database.module';
 import { CampaignModule } from './module/v1/campaign/campaign.module';
 import { ContributorModule } from './module/v1/contributor/contributor.module';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
 
 @Module({
   imports: [
@@ -15,7 +17,7 @@ import { ContributorModule } from './module/v1/contributor/contributor.module';
     CampaignModule,
     ContributorModule,
   ],
-  controllers: [],
-  providers: [],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule {}

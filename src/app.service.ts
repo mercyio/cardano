@@ -4,9 +4,9 @@ import { Injectable } from '@nestjs/common';
 export class AppService {
   async getUserInfo() {
     return {
-      email: 'mercydanke@gmail.com',
+      email: 'mercyvincent_@gmail.com',
       current_datetime: new Date().toISOString().replace(/\.\d{3}Z$/, 'Z'),
-      github_url: 'https://github.com/mercyio/hng-0',
+      github_url: 'https://github.com/mercyio/cardano',
     };
   }
 }
