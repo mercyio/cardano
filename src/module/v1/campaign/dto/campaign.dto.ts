@@ -4,9 +4,11 @@ import {
   IsEnum,
   IsNotEmpty,
   IsNumber,
+  IsOptional,
   IsString,
 } from 'class-validator';
 import { PaymentTypeEnum } from 'src/common/enums/payment.enum';
+import { PaginationDto } from '../../repository/dto/repository.dto';
 
 export class CreateCampaignDto {
   @IsString()
@@ -37,4 +39,10 @@ export class CreateCampaignDto {
     ).join(', ')}`,
   })
   paymentMethod: PaymentTypeEnum;
+}
+
+export class SearchCampaignDto extends PaginationDto {
+  @IsOptional()
+  @IsString()
+  searchQuery?: string;
 }

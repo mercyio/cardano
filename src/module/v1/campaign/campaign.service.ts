@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model, UpdateQuery } from 'mongoose';
 import { Campaign, CampaignDocument } from './schema/campaign.schema';
 import { RepositoryService } from '../repository/repository.service';
-import { CreateCampaignDto } from './dto/campaign.dto';
+import { CreateCampaignDto, SearchCampaignDto } from './dto/campaign.dto';
 import { PaginationDto } from '../repository/dto/repository.dto';
 
 @Injectable()
@@ -47,5 +47,33 @@ export class CampaignService {
         new: true,
       },
     );
+  }
+
+  async searchCampaigns(query: SearchCampaignDto) {
+    const { searchQuery, page, size } = query;
+
+    return await this.repositoryService.paginate({
+      model: this.campaignModel,
+      query: { page, size },
+      options: {
+        $or: [
+          {
+            title: {
+              $regex: new RegExp(searchQuery, 'i'),
+            },
+          },
+          {
+            description: {
+              $regex: new RegExp(searchQuery, 'i'),
+            },
+          },
+          {
+            paymentMethod: {
+              $regex: new RegExp(searchQuery, 'i'),
+            },
+          },
+        ],
+      },
+    });
   }
 }
