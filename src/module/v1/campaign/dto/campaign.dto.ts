@@ -51,3 +51,13 @@ export class SearchCampaignDto extends PaginationDto {
   @IsString()
   searchQuery?: string;
 }
+
+export class GetAllCampaignsDto extends PaginationDto {
+  @IsOptional()
+  @IsString()
+  paymentMethod?: string;
+
+  @IsOptional()
+  @IsString()
+  category?: string;
+}
