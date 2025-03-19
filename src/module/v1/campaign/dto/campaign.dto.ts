@@ -2,6 +2,7 @@ import { Type } from 'class-transformer';
 import {
   IsDate,
   IsEnum,
+  IsMongoId,
   IsNotEmpty,
   IsNumber,
   IsOptional,
@@ -11,6 +12,10 @@ import { PaymentTypeEnum } from 'src/common/enums/payment.enum';
 import { PaginationDto } from '../../repository/dto/repository.dto';
 
 export class CreateCampaignDto {
+  @IsMongoId()
+  @IsNotEmpty()
+  category: string;
+
   @IsString()
   @IsNotEmpty()
   title: string;

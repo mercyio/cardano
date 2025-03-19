@@ -2,6 +2,10 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { Document } from 'mongoose';
 import { PaymentTypeEnum } from 'src/common/enums/payment.enum';
 import { User, UserDocument } from '../../user/schemas/user.schema';
+import {
+  Category,
+  CategoryDocument,
+} from '../../category/schemas/category.schema';
 
 export type CampaignDocument = Campaign & Document;
 
@@ -12,6 +16,12 @@ export class Campaign {
     ref: User.name,
   })
   user: UserDocument;
+
+  @Prop({
+    type: mongoose.Schema.Types.ObjectId,
+    ref: Category.name,
+  })
+  category: CategoryDocument;
 
   @Prop({ required: true })
   title: string;
