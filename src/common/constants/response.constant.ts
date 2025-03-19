@@ -1,16 +1,7 @@
 export const RESPONSE_CONSTANT = {
   AUTH: {
-    REGISTER_SUCCESS:
-      'Registration Successful, check email for account verification code',
+    REGISTER_SUCCESS: 'Registration Successful,',
     LOGIN_SUCCESS: 'Login Successful',
-    EMAIL_VERIFICATION_SUCCESS: 'Email verified successfully',
-    PHONE_VERIFICATION_SUCCESS: 'Phone verified successfully',
-    PASSWORD_RESET_EMAIL_SUCCESS: 'Password Reset Email Sent Successfully',
-    PASSWORD_RESET_SUCCESS: 'Password Reset Successfully',
-  },
-  OTP: {
-    OTP_VERIFIED_SUCCESS: 'OTP verified successfully',
-    OTP_SENT_SUCCESS: 'OTP sent successfully',
   },
   USER: {
     GET_CURRENT_USER_SUCCESS: 'Current User Retrieved Successfully',
@@ -37,5 +28,10 @@ export const RESPONSE_CONSTANT = {
   ORDER: {
     ORDER_RECEIPT_CONFIRMATION_SUCCESS:
       'Order confirmed successfully, thanks for your purchase!',
+  },
+  CATEGORY: {
+    CREATED_SUCCESS: 'Category Created Successfully',
+    UPDATED_SUCCESS: 'Category Updated Successfully',
+    GET_ALL_CATEGORY__SUCCESS: 'Category Retrieved Successfully',
   },
 };

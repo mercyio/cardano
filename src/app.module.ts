@@ -7,6 +7,7 @@ import { CampaignModule } from './module/v1/campaign/campaign.module';
 import { ContributorModule } from './module/v1/contributor/contributor.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { CategoryModule } from './module/v1/category/category.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { AppService } from './app.service';
     RepositoryModule,
     CampaignModule,
     ContributorModule,
+    CategoryModule,
   ],
   controllers: [AppController],
   providers: [AppService],
