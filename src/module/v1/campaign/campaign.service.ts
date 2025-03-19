@@ -1,26 +1,25 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, UpdateQuery } from 'mongoose';
 import { Campaign, CampaignDocument } from './schema/campaign.schema';
 import { RepositoryService } from '../repository/repository.service';
 import { CreateCampaignDto, SearchCampaignDto } from './dto/campaign.dto';
 import { PaginationDto } from '../repository/dto/repository.dto';
+import { CategoryService } from '../category/category.service';
 
 @Injectable()
 export class CampaignService {
   constructor(
     @InjectModel(Campaign.name) private campaignModel: Model<CampaignDocument>,
     private repositoryService: RepositoryService,
+    private categoryService: CategoryService,
   ) {}
 
   async create(payload: CreateCampaignDto) {
-    const campaignNameExist = await this.campaignModel.exists({
-      title: payload.title,
-    });
-
-    if (campaignNameExist) {
-      throw new ConflictException('this campaign already exist');
-    }
+    await Promise.all([
+      this.categoryService.checkCategoryExists(payload.category),
+      this.campaignWithNameExist(payload.title),
+    ]);
 
     return await this.campaignModel.create(payload);
   }
@@ -75,5 +74,18 @@ export class CampaignService {
         ],
       },
     });
+  }
+
+  async campaignWithNameExist(title: string, _id?: string) {
+    const campaign = await this.campaignModel.exists({
+      title: new RegExp(title, 'i'),
+      _id: { $ne: _id },
+    });
+
+    if (campaign) {
+      throw new BadRequestException(
+        `campaign with name ${title} already exists`,
+      );
+    }
   }
 }
