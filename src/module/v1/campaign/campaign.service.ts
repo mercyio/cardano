@@ -1,10 +1,13 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, UpdateQuery } from 'mongoose';
+import { Model, Types, UpdateQuery } from 'mongoose';
 import { Campaign, CampaignDocument } from './schema/campaign.schema';
 import { RepositoryService } from '../repository/repository.service';
-import { CreateCampaignDto, SearchCampaignDto } from './dto/campaign.dto';
-import { PaginationDto } from '../repository/dto/repository.dto';
+import {
+  CreateCampaignDto,
+  GetAllCampaignsDto,
+  SearchCampaignDto,
+} from './dto/campaign.dto';
 import { CategoryService } from '../category/category.service';
 
 @Injectable()
@@ -24,10 +27,40 @@ export class CampaignService {
     return await this.campaignModel.create(payload);
   }
 
-  async allCampaigns(query: PaginationDto) {
+  async allCampaign(query: GetAllCampaignsDto) {
     return this.repositoryService.paginate({
       model: this.campaignModel,
       query,
+      options: {
+        ...(query.category && { category: query.category }),
+        ...(query.paymentMethod && { paymentMethod: query.paymentMethod }),
+      },
+    });
+  }
+
+  async allCampaigns(query: GetAllCampaignsDto) {
+    const options: any = {};
+
+    // Only add category filter if it's a valid ObjectId
+    if (query.category) {
+      if (Types.ObjectId.isValid(query.category)) {
+        options.category = query.category;
+      } else {
+        // If it's not a valid ObjectId, don't include it in the filter
+        // This prevents the CastError
+        console.log(`Invalid ObjectId format for category: ${query.category}`);
+      }
+    }
+
+    // Add payment method filter if provided
+    if (query.paymentMethod) {
+      options.paymentMethod = query.paymentMethod;
+    }
+
+    return this.repositoryService.paginate({
+      model: this.campaignModel,
+      query,
+      options,
     });
   }
 
