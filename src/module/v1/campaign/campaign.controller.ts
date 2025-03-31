@@ -10,7 +10,7 @@ import {
 import { IDQueryDto } from 'src/common/dto/query.dto';
 import { Public } from 'src/common/decorators/public.decorator';
 
-@Controller('campaign')
+@Controller()
 export class CampaignController {
   constructor(private campaignService: CampaignService) {}
 
@@ -21,13 +21,13 @@ export class CampaignController {
   }
 
   @Public()
-  @Get()
+  @Get('campaign')
   async singleCampaign(@Query() { _id }: IDQueryDto) {
     return await this.campaignService.singleCampaign(_id);
   }
 
   @Public()
-  @Get('all')
+  @Get()
   async allCampaigns(@Query() query: GetAllCampaignsDto) {
     return await this.campaignService.allCampaigns(query);
   }
