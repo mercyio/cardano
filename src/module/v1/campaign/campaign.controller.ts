@@ -15,7 +15,7 @@ export class CampaignController {
   constructor(private campaignService: CampaignService) {}
 
   @ResponseMessage(RESPONSE_CONSTANT.CAMPAIGN.CAMPAIGN_CREATE_SUCCESS)
-  @Post()
+  @Post('campaign')
   async create(@Body() payload: CreateCampaignDto) {
     return await this.campaignService.create(payload);
   }
