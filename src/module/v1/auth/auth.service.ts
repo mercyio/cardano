@@ -15,7 +15,6 @@ import { cacheHelper } from 'src/common/utils/cache-helper.util';
 import { authConstants } from 'src/common/constants/authConstant';
 import { ERROR_CODES } from 'src/common/constants/error-codes.constant';
 import { UserDocument } from '../user/schemas/user.schema';
-import { AppError } from 'src/common/filter/app-error.filter';
 
 @Injectable()
 export class AuthService {
@@ -191,17 +190,15 @@ export class AuthService {
         {
           $set: {
             username: payload.username,
+            authSource: 'WALLET',
           },
         },
       );
     } else {
-      user = await this.userService.createWalletUser({
+      user = await this.userService.createUser({
         walletAddress: payload.walletAddress,
-        authSource: 'WALLET',
         username: payload.username,
         role: payload.role,
-        signature: payload.signature,
-        nonce: payload.nonce,
       });
     }
 

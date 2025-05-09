@@ -90,17 +90,6 @@ export class UserService {
     }
   }
 
-  async createWalletUser(payload: WalletLoginDto) {
-    return await this.userModel.create({
-      walletAddress: payload.walletAddress,
-      username: payload.username,
-      role: payload.role ?? 'USER',
-      authSource: 'WALLET',
-      // signature: payload.signature,
-      // nonce: payload.nonce,
-    });
-  }
-
   async createUserFromGoogle(payload: GoogleAuthDto) {
     return await this.userModel.create({
       ...payload,
