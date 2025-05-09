@@ -8,7 +8,7 @@ import { Observable, of } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { Reflector } from '@nestjs/core';
 import { CACHE_EXPIRY, NO_CACHE } from '../decorators/cache.decorator';
-import { CacheHelperUtil } from '../utils/cache-helper.util';
+import { cacheHelper } from '../utils/cache-helper.util';
 
 @Injectable()
 export class CacheInterceptor implements NestInterceptor {
@@ -36,7 +36,7 @@ export class CacheInterceptor implements NestInterceptor {
     }
 
     if (request.method === 'GET') {
-      const cachedResponse = await CacheHelperUtil.getCache(key);
+      const cachedResponse = await cacheHelper.getCache(key);
 
       if (cachedResponse) {
         return of(cachedResponse);
@@ -44,7 +44,7 @@ export class CacheInterceptor implements NestInterceptor {
 
       return next.handle().pipe(
         tap((response) => {
-          CacheHelperUtil.setCache(key, response, cacheExpiry ?? 60 * 5); // cache for 5 minutes
+          cacheHelper.setCache(key, response, cacheExpiry ?? 60 * 5); // cache for 5 minutes
         }),
       );
     } else {

@@ -10,7 +10,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { BaseHelper } from '../../../../common/utils/helper/helper.util';
 import { UserRoleEnum } from '../../../../common/enums/user.enum';
 import { CreateUserDto } from '../dto/user.dto';
-import { GoogleAuthDto } from '../../auth/dto/auth.dto';
+import { GoogleAuthDto, WalletLoginDto } from '../../auth/dto/auth.dto';
 
 @Injectable()
 export class UserService {
@@ -24,32 +24,57 @@ export class UserService {
     role?: UserRoleEnum,
   ): Promise<UserDocument> {
     try {
-      const { password, confirmPassword } = payload;
-      const userWithEmailExists = await this.userModel.exists({
-        email: payload.email,
-      });
+      const { password, confirmPassword, authSource, email } = payload;
+      let userWithEmailExists = false;
 
-      if (userWithEmailExists) {
-        throw new BadRequestException('User with this email already exists');
+      if (email) {
+        const existingUser = await this.userModel.exists({ email });
+        userWithEmailExists = !!existingUser;
+
+        if (userWithEmailExists) {
+          throw new BadRequestException('User with this email already exists');
+        }
       }
 
-      if (password !== confirmPassword) {
-        throw new BadRequestException(
-          'Password and confirm password do not match',
-        );
+      if (authSource !== 'WALLET') {
+        if (!password) {
+          throw new BadRequestException('Password is required');
+        }
+
+        if (password !== confirmPassword) {
+          throw new BadRequestException(
+            'Password and confirm password do not match',
+          );
+        }
       }
 
-      const hashedPassword = await BaseHelper.hashData(payload.password);
+      const hashedPassword =
+        authSource !== 'WALLET' && password
+          ? await BaseHelper.hashData(password)
+          : undefined;
 
       const userRole = role ?? UserRoleEnum.USER;
 
-      const createdUser = await this.userModel.create({
+      const wallet = BaseHelper.generateWallet();
+
+      const userPayload: any = {
         ...payload,
         password: hashedPassword,
         role: userRole,
-      });
+        authSource: 'EMAIL',
+        isNewUser: !userWithEmailExists,
+        walletAddress: wallet.publicKey,
+      };
 
-      delete createdUser['_doc'].password;
+      if (!hashedPassword) delete userPayload.password;
+      if (!email) delete userPayload.email;
+
+      const createdUser = await this.userModel.create(userPayload);
+
+      if (createdUser['_doc'].password) {
+        delete createdUser['_doc'].password;
+      }
+
       return createdUser;
     } catch (e) {
       console.error('Error while creating user', e);
@@ -65,12 +90,23 @@ export class UserService {
     }
   }
 
+  async createWalletUser(payload: WalletLoginDto) {
+    return await this.userModel.create({
+      walletAddress: payload.walletAddress,
+      username: payload.username,
+      role: payload.role ?? 'USER',
+      authSource: 'WALLET',
+      // signature: payload.signature,
+      // nonce: payload.nonce,
+    });
+  }
+
   async createUserFromGoogle(payload: GoogleAuthDto) {
     return await this.userModel.create({
       ...payload,
       emailVerified: true,
-      isGoogleAuth: true,
       isLoggedOut: false,
+      authSource: 'GOOGLE',
     });
   }
 
