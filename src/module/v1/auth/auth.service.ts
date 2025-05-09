@@ -15,7 +15,6 @@ import { cacheHelper } from 'src/common/utils/cache-helper.util';
 import { authConstants } from 'src/common/constants/authConstant';
 import { ERROR_CODES } from 'src/common/constants/error-codes.constant';
 import { UserDocument } from '../user/schemas/user.schema';
-import { AppError } from 'src/common/filter/app-error.filter';
 
 @Injectable()
 export class AuthService {
@@ -186,24 +185,18 @@ export class AuthService {
     let user = existingUser;
 
     if (existingUser) {
-      if (existingUser.authSource !== 'WALLET') {
-        throw new BadRequestException(
-          'This wallet address is already linked to an account registered with an existing Login details. Please log in with email or google.',
-          ERROR_CODES.UNAUTHORIZED,
-        );
-      }
       await this.userService.updateQuery(
         { _id: existingUser._id },
         {
           $set: {
             username: payload.username,
+            authSource: 'WALLET',
           },
         },
       );
     } else {
       user = await this.userService.createUser({
         walletAddress: payload.walletAddress,
-        authSource: 'WALLET',
         username: payload.username,
         role: payload.role,
       });
