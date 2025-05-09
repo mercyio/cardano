@@ -7,6 +7,7 @@ export interface IEnvironment {
     PORT: number | string;
     ENV: string;
     ENCRYPTION_KEY: string;
+    LOG_LEVEL: string;
   };
   DB: {
     URL: string;
@@ -53,6 +54,7 @@ export const ENVIRONMENT: IEnvironment = {
     PORT: process.env.PORT || process.env.APP_PORT || 3000,
     ENV: process.env.APP_ENV,
     ENCRYPTION_KEY: process.env.APP_ENCRYPTION_KEY,
+    LOG_LEVEL: process.env.LOG_LEVEL,
   },
   DB: {
     URL: process.env.DB_URL,
@@ -96,3 +98,11 @@ export const ENVIRONMENT: IEnvironment = {
 export const isDevEnvironment = ['development', 'dev', 'staging'].includes(
   ENVIRONMENT.APP.ENV?.toLowerCase(),
 );
+
+/**
+ * Helper functions for environment checks
+ */
+export const isDevelopment = (): boolean =>
+  ENVIRONMENT.APP.ENV === 'development';
+export const isProduction = (): boolean => ENVIRONMENT.APP.ENV === 'production';
+export const isTest = (): boolean => ENVIRONMENT.APP.ENV === 'test';

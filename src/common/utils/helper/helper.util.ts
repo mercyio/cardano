@@ -1,8 +1,12 @@
 import * as bcrypt from 'bcryptjs';
 import { createCipheriv, createDecipheriv, randomBytes } from 'crypto';
 import * as fs from 'fs';
-import { customAlphabet, nanoid } from 'nanoid';
+// import { customAlphabet, nanoid } from 'nanoid';
 import { ENVIRONMENT } from '../../configs/environment';
+import { v4 as uuidv4 } from 'uuid';
+import { logger } from '../logger';
+import { WALLET_CONSTANT } from 'src/common/constants/walletConstant';
+import { ethers } from 'ethers';
 
 const encryptionKeyFromEnv = ENVIRONMENT.APP.ENCRYPTION_KEY;
 
@@ -87,12 +91,12 @@ export class BaseHelper {
     return `${folder}/${uniqueId}.${fileExtension}`;
   }
 
-  static generateUniqueIdentifier(): string {
-    const prefix = `${ENVIRONMENT.APP.NAME?.toUpperCase()}-`;
-    const randomChars = nanoid();
+  // static generateUniqueIdentifier(): string {
+  //   const prefix = `${ENVIRONMENT.APP.NAME?.toUpperCase()}-`;
+  //   const randomChars = nanoid();
 
-    return `${prefix}${randomChars}`;
-  }
+  //   return `${prefix}${randomChars}`;
+  // }
 
   static deleteFile(path: string) {
     if (fs.existsSync(path)) {
@@ -100,14 +104,14 @@ export class BaseHelper {
     }
   }
 
-  static generateReferralCode(userId: string): string {
-    // Generate a unique referral code for the user by combining the first 4 and last 3 digits of the user's ID
-    const uniqueId =
-      userId.toString().slice(0, 4) + userId.toString().slice(-3);
-    const randomChars = nanoid(6);
+  // static generateReferralCode(userId: string): string {
+  //   // Generate a unique referral code for the user by combining the first 4 and last 3 digits of the user's ID
+  //   const uniqueId =
+  //     userId.toString().slice(0, 4) + userId.toString().slice(-3);
+  //   const randomChars = nanoid(6);
 
-    return `${uniqueId}${randomChars}`;
-  }
+  //   return `${uniqueId}${randomChars}`;
+  // }
 
   static parseStringToObject(string: string) {
     return string && typeof string === 'string' ? JSON.parse(string) : string;
@@ -124,17 +128,58 @@ export class BaseHelper {
     });
   }
 
-  static generateReferenceCode(refPrefix?: string): string {
-    const REF_NUMBER_LENGTH = 8;
-    const REF_PREFIX = refPrefix || 'REF';
-    const REF_ALPHABET = '0123456789';
+  // static generateReferenceCode(refPrefix?: string): string {
+  //   const REF_NUMBER_LENGTH = 8;
+  //   const REF_PREFIX = refPrefix || 'REF';
+  //   const REF_ALPHABET = '0123456789';
 
-    const date = new Date();
-    const datePart = date.toISOString().slice(0, 10).replace(/-/g, '');
+  //   const date = new Date();
+  //   const datePart = date.toISOString().slice(0, 10).replace(/-/g, '');
 
-    const numberGen = customAlphabet(REF_ALPHABET, REF_NUMBER_LENGTH);
-    const uniqueNumber = numberGen();
+  //   const numberGen = customAlphabet(REF_ALPHABET, REF_NUMBER_LENGTH);
+  //   const uniqueNumber = numberGen();
 
-    return `${REF_PREFIX}-${datePart}-${uniqueNumber}`;
+  //   return `${REF_PREFIX}-${datePart}-${uniqueNumber}`;
+  // }
+
+  static generateUuid = () => {
+    return uuidv4();
+  };
+
+  static createSignatureMessage = (
+    walletAddress: string,
+    nonce: string,
+  ): string => {
+    return `${WALLET_CONSTANT.walletMessagePrefix}\nWallet: ${walletAddress}\nNonce: ${nonce}`;
+  };
+
+  static verifyWalletSignature = (
+    message: string,
+    signature: string,
+    walletAddress: string,
+  ): boolean => {
+    try {
+      // Verify the signature using ethers.js
+      const recoveredAddress = ethers.verifyMessage(message, signature);
+      console.log('recoveredAddress', recoveredAddress);
+
+      // Compare the recovered address with the provided wallet address (case-insensitive)
+      return recoveredAddress.toLowerCase() === walletAddress.toLowerCase();
+    } catch (error: unknown) {
+      logger.error('Error verifying wallet signature', error, {
+        walletAddress,
+      });
+      return false;
+    }
+  };
+
+  static generateWallet() {
+    const wallet = ethers.Wallet.createRandom();
+    return {
+      walletAddress: wallet.address,
+      privateKey: wallet.privateKey,
+      publicKey: wallet.publicKey,
+      mnemonic: wallet.mnemonic?.phrase || '',
+    };
   }
 }

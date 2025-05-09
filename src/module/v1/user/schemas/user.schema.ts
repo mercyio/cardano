@@ -7,28 +7,34 @@ export type UserDocument = User & Document;
 @Schema({ timestamps: true })
 export class User {
   @Prop({ required: false, default: null, index: true })
-  fullname: string;
+  username: string;
 
-  @Prop({ required: true, unique: true, index: true })
+  @Prop({ unique: true, index: true })
   email: string;
 
-  @Prop({ default: true })
+  @Prop({ default: false })
   emailVerified: boolean;
 
   @Prop({ select: false })
   password: string;
 
   @Prop({ default: '' })
-  wallet: string;
+  walletAddress: string;
+
+  @Prop({ required: false, default: null })
+  authSource: string;
+
+  @Prop({ required: false, default: null })
+  profileImage: string;
 
   @Prop({ enum: UserRoleEnum, default: UserRoleEnum.USER })
   role: UserRoleEnum;
 
   @Prop({ default: false })
-  isGoogleAuth: boolean;
+  isDeleted: boolean;
 
   @Prop({ default: false })
-  isDeleted: boolean;
+  isNewUser: boolean;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

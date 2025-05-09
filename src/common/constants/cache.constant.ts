@@ -1,3 +1,6 @@
+import { isDevEnvironment } from '../configs/environment';
+import { APP_CONSTANT } from './app.constant';
+
 export const CACHE_EXPIRY = {
   ONE_MINUTE: 60,
   FIVE_MINUTES: 60 * 5,
@@ -14,4 +17,19 @@ export const CACHE_EXPIRY = {
 
 export const CACHE_KEYS = {
   appSettings: 'cardano:appSettings',
+};
+
+const cacheKeyPrefix = `${APP_CONSTANT.appName}:${isDevEnvironment}:`;
+const addCacheKey = (key: string) => `${cacheKeyPrefix}${key}`;
+
+export const cacheKeys = {
+  mediaUpload: (fileName: string) => {
+    return addCacheKey(`mediaUpload:${fileName}`);
+  },
+  walletNonce: (walletAddress: string) => {
+    return addCacheKey(`walletNonce:${walletAddress}`);
+  },
+  walletNonceRateLimit: (walletAddress: string) => {
+    return addCacheKey(`walletNonceRateLimit:${walletAddress}`);
+  },
 };
