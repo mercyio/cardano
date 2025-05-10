@@ -33,10 +33,10 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
         isError = true;
       }
 
-      if (user && !user?.emailVerified) {
-        errorMessage = 'Please verify your email to continue.';
-        isError = true;
-      }
+      // if (user && !user?.emailVerified) {
+      //   errorMessage = 'Please verify your email to continue.';
+      //   isError = true;
+      // }
 
       if (isError) {
         throw new AppError(
