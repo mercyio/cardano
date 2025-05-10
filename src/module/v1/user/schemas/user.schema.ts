@@ -9,16 +9,10 @@ export class User {
   @Prop({ required: false, default: null, index: true })
   username: string;
 
-  @Prop({ index: true })
+  @Prop({ required: false, default: null })
   email: string;
 
-  @Prop({ default: false })
-  emailVerified: boolean;
-
-  @Prop({ select: false })
-  password: string;
-
-  @Prop({ default: '' })
+  @Prop({ default: null })
   walletAddress: string;
 
   @Prop({ required: false, default: null })

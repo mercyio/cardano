@@ -1,15 +1,6 @@
 import { IsEmail, IsOptional, IsString } from 'class-validator';
 import { UserRoleEnum } from 'src/common/enums/user.enum';
 
-export class LoginDto {
-  @IsOptional()
-  @IsEmail()
-  email: string;
-
-  @IsString()
-  password: string;
-}
-
 export class GoogleAuthDto {
   @IsEmail()
   email: string;

@@ -2,6 +2,7 @@ export const RESPONSE_CONSTANT = {
   AUTH: {
     REGISTER_SUCCESS: 'Registration Successful,',
     LOGIN_SUCCESS: 'Login Successful',
+    WALLET_NONCE: 'Wallet Nonce Generated Successfully',
   },
   USER: {
     GET_CURRENT_USER_SUCCESS: 'Current User Retrieved Successfully',

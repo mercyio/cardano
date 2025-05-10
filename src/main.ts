@@ -38,7 +38,7 @@ async function bootstrap() {
   /**
    * Set global prefix for routes
    */
-  app.setGlobalPrefix('/api');
+  app.setGlobalPrefix('/api/v1');
 
   /**
    *  Set global pipes
