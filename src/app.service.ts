@@ -11,4 +11,12 @@ export class AppService {
       timeStamp: new Date().toISOString(),
     };
   }
+
+  async getAppHealth() {
+    return {
+      status: 'ok',
+      uptime: process.uptime(),
+      timeStamp: new Date().toISOString(),
+    };
+  }
 }

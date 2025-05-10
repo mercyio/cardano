@@ -11,4 +11,10 @@ export class AppController {
   async getAppInfo() {
     return await this.appService.getAppInfo();
   }
+
+  @Public()
+  @Get('health')
+  async getAppHealth() {
+    return await this.appService.getAppHealth();
+  }
 }
