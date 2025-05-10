@@ -3,18 +3,17 @@ import {
   ConflictException,
   Injectable,
 } from '@nestjs/common';
-import { CreateUserDto } from '../user/dto/user.dto';
 import { UserService } from '../user/services/user.service';
 import { BaseHelper } from '../../../common/utils/helper/helper.util';
 import { JwtService } from '@nestjs/jwt';
-import { UserRoleEnum } from '../../../common/enums/user.enum';
 import { ENVIRONMENT } from 'src/common/configs/environment';
-import { GoogleAuthDto, LoginDto, WalletLoginDto } from './dto/auth.dto';
+import { GoogleAuthDto, WalletLoginDto } from './dto/auth.dto';
 import { cacheKeys } from 'src/common/constants/cache.constant';
 import { cacheHelper } from 'src/common/utils/cache-helper.util';
 import { authConstants } from 'src/common/constants/authConstant';
 import { ERROR_CODES } from 'src/common/constants/error-codes.constant';
 import { UserDocument } from '../user/schemas/user.schema';
+import { AuthSourceEnum } from 'src/common/enums/user.enum';
 
 @Injectable()
 export class AuthService {
@@ -23,60 +22,13 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async register(payload: CreateUserDto, role?: UserRoleEnum) {
-    const user = await this.userService.createUser(payload, role);
-    return user;
-  }
-
-  async login(payload: LoginDto) {
-    const { email, password } = payload;
-
-    if (!email) {
-      throw new BadRequestException('Email is required');
-    }
-
-    const user = await this.userService.getUserDetailsWithPassword({ email });
-
-    if (!user) {
-      throw new BadRequestException('Invalid Credential');
-    }
-
-    if (user.authSource !== 'EMAIL') {
-      throw new BadRequestException('Please login with your wallet.');
-    }
-
-    const passwordMatch = await BaseHelper.compareHashedData(
-      password,
-      user.password,
-    );
-
-    if (!passwordMatch) {
-      throw new BadRequestException('Incorrect Password');
-    }
-
-    const token = this.jwtService.sign(
-      { _id: user._id },
-      {
-        secret: ENVIRONMENT.JWT.SECRET,
-      },
-    );
-    delete user['_doc'].password;
-
-    return {
-      ...user['_doc'],
-      emailVerified: true,
-      accessToken: token,
-      authSource: 'EMAIL',
-    };
-  }
-
   async googleAuth(payload: GoogleAuthDto) {
     const { email } = payload;
 
     const user = await this.userService.getUserByEmail(email);
 
     if (user) {
-      if (user.authSource !== 'GOOGLE') {
+      if (user.authSource !== AuthSourceEnum.GOOGLE) {
         throw new ConflictException(
           'Looks like you already have an account! Use your existing login details or choose a different email address to sign up with Google',
         );
@@ -190,12 +142,12 @@ export class AuthService {
         {
           $set: {
             username: payload.username,
-            authSource: 'WALLET',
+            authSource: AuthSourceEnum.WALLET,
           },
         },
       );
     } else {
-      user = await this.userService.createUser({
+      user = await this.userService.createWalletUser({
         walletAddress: payload.walletAddress,
         username: payload.username,
         role: payload.role,
@@ -221,6 +173,7 @@ export class AuthService {
       },
     };
   }
+
   async logout(userId: string): Promise<void> {
     await this.userService.updateQuery({ _id: userId }, { loginToken: null });
   }

@@ -23,16 +23,6 @@ export class BaseHelper {
     return await bcrypt.compare(data, hashed);
   }
 
-  static generateOTP(): number {
-    return Math.floor(Math.random() * (99999 - 10000 + 1)) + 10000;
-  }
-
-  static readonly isValidFileNameAwsUpload = (fileName: string) => {
-    const regex =
-      /^[a-zA-Z0-9_\-/]+\/[a-zA-Z0-9_-]+(?:-\d+)?\.(jpg|png|jpeg|webp)$/;
-    return regex.test(fileName);
-  };
-
   static encryptData(
     data: string,
     encryptionKey: string = encryptionKeyFromEnv,
@@ -79,39 +69,11 @@ export class BaseHelper {
     return encryptionKey;
   }
 
-  static generateFileName(folder = 'uploads', mimetype = 'image/jpg') {
-    const uniqueId = crypto.randomUUID();
-    const fileExtension = mimetype.split('/')[1];
-    const validExtensions = ['jpg', 'png', 'jpeg', 'webp'];
-
-    if (!validExtensions.includes(fileExtension)) {
-      throw new Error('Invalid file extension');
-    }
-
-    return `${folder}/${uniqueId}.${fileExtension}`;
-  }
-
-  // static generateUniqueIdentifier(): string {
-  //   const prefix = `${ENVIRONMENT.APP.NAME?.toUpperCase()}-`;
-  //   const randomChars = nanoid();
-
-  //   return `${prefix}${randomChars}`;
-  // }
-
   static deleteFile(path: string) {
     if (fs.existsSync(path)) {
       fs.unlinkSync(path);
     }
   }
-
-  // static generateReferralCode(userId: string): string {
-  //   // Generate a unique referral code for the user by combining the first 4 and last 3 digits of the user's ID
-  //   const uniqueId =
-  //     userId.toString().slice(0, 4) + userId.toString().slice(-3);
-  //   const randomChars = nanoid(6);
-
-  //   return `${uniqueId}${randomChars}`;
-  // }
 
   static parseStringToObject(string: string) {
     return string && typeof string === 'string' ? JSON.parse(string) : string;
@@ -127,21 +89,6 @@ export class BaseHelper {
       minimumFractionDigits: 2,
     });
   }
-
-  // static generateReferenceCode(refPrefix?: string): string {
-  //   const REF_NUMBER_LENGTH = 8;
-  //   const REF_PREFIX = refPrefix || 'REF';
-  //   const REF_ALPHABET = '0123456789';
-
-  //   const date = new Date();
-  //   const datePart = date.toISOString().slice(0, 10).replace(/-/g, '');
-
-  //   const numberGen = customAlphabet(REF_ALPHABET, REF_NUMBER_LENGTH);
-  //   const uniqueNumber = numberGen();
-
-  //   return `${REF_PREFIX}-${datePart}-${uniqueNumber}`;
-  // }
-
   static generateUuid = () => {
     return uuidv4();
   };

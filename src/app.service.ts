@@ -1,12 +1,14 @@
 import { Injectable } from '@nestjs/common';
+import { APP_CONSTANT } from './common/constants/app.constant';
 
 @Injectable()
 export class AppService {
-  async getUserInfo() {
+  async getAppInfo() {
     return {
-      email: 'mercyvincent_@gmail.com',
-      current_datetime: new Date().toISOString().replace(/\.\d{3}Z$/, 'Z'),
-      github_url: 'https://github.com/mercyio/cardano',
+      appName: APP_CONSTANT.appName,
+      appVersion: APP_CONSTANT.appVersion,
+      appDescription: APP_CONSTANT.appDescription,
+      timeStamp: new Date().toISOString(),
     };
   }
 }

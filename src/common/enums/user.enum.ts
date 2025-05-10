@@ -3,3 +3,8 @@ export enum UserRoleEnum {
   SUPER_ADMIN = 'SUPER_ADMIN',
   USER = 'USER',
 }
+
+export enum AuthSourceEnum {
+  WALLET = 'WALLET',
+  GOOGLE = 'GOOGLE',
+}
