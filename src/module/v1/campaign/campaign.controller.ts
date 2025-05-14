@@ -9,6 +9,8 @@ import {
 } from './dto/campaign.dto';
 import { IDQueryDto } from 'src/common/dto/query.dto';
 import { Public } from 'src/common/decorators/public.decorator';
+import { LoggedInUserDecorator } from 'src/common/decorators/logged-in-user.decorator';
+import { UserDocument } from '../user/schemas/user.schema';
 
 @Controller()
 export class CampaignController {
@@ -16,8 +18,11 @@ export class CampaignController {
 
   @ResponseMessage(RESPONSE_CONSTANT.CAMPAIGN.CAMPAIGN_CREATE_SUCCESS)
   @Post('campaign')
-  async create(@Body() payload: CreateCampaignDto) {
-    return await this.campaignService.create(payload);
+  async create(
+    @LoggedInUserDecorator() user: UserDocument,
+    @Body() payload: CreateCampaignDto,
+  ) {
+    return await this.campaignService.create(user, payload);
   }
 
   @Public()

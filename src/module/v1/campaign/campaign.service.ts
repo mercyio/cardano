@@ -9,6 +9,7 @@ import {
   SearchCampaignDto,
 } from './dto/campaign.dto';
 import { CategoryService } from '../category/category.service';
+import { UserDocument } from '../user/schemas/user.schema';
 
 @Injectable()
 export class CampaignService {
@@ -18,15 +19,17 @@ export class CampaignService {
     private categoryService: CategoryService,
   ) {}
 
-  async create(payload: CreateCampaignDto) {
+  async create(user: UserDocument, payload: CreateCampaignDto) {
     await Promise.all([
       this.categoryService.checkCategoryExists(payload.category),
       this.campaignWithNameExist(payload.title),
     ]);
 
-    return await this.campaignModel.create(payload);
+    return await this.campaignModel.create({
+      ...payload,
+      walletAddress: user.walletAddress,
+    });
   }
-
   async allCampaign(query: GetAllCampaignsDto) {
     return this.repositoryService.paginate({
       model: this.campaignModel,

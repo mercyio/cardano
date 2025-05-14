@@ -130,18 +130,20 @@ export class AuthService {
     // Remove the used nonce immediately
     await cacheHelper.removeFromCache(nonceKey);
 
-    const existingUser = (await this.userService.findOneQuery({
+    let user = (await this.userService.findOneQuery({
       walletAddress: payload.walletAddress,
     })) as UserDocument;
 
-    let user = existingUser;
+    const isNewUser = !user;
+    const now = new Date();
 
-    if (existingUser) {
+    if (user) {
       await this.userService.updateQuery(
-        { _id: existingUser._id },
+        { _id: user._id },
         {
           $set: {
             username: payload.username,
+            lastLoginAt: now,
             authSource: AuthSourceEnum.WALLET,
           },
         },
@@ -163,7 +165,7 @@ export class AuthService {
     );
 
     return {
-      isNewUser: !existingUser,
+      isNewUser,
       token,
       user: {
         _id: user._id,
