@@ -41,8 +41,8 @@ export class Campaign {
   @Prop({ required: true })
   endDate: Date;
 
-  @Prop({ default: '' })
-  wallet: string;
+  @Prop({ default: null })
+  walletAddress: string;
 
   @Prop({ enum: PaymentTypeEnum, required: true })
   paymentMethod: PaymentTypeEnum;
