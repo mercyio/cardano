@@ -9,10 +9,10 @@ export class User {
   @Prop({ required: false, default: null, index: true })
   username: string;
 
-  @Prop({ required: false, default: null })
+  @Prop({ required: false, sparse: true })
   email: string;
 
-  @Prop({ default: null })
+  @Prop({ unique: true, sparse: true })
   walletAddress: string;
 
   @Prop({ required: false, default: null })
