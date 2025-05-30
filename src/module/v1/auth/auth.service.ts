@@ -93,7 +93,7 @@ export class AuthService {
   async loginWithWallet(payload: WalletLoginDto) {
     // Verify nonce exists and hasn't expired
     const nonceKey = cacheKeys.walletNonce(payload.walletAddress);
-    const storedNonce = await cacheHelper.getCache<string>(nonceKey);
+    await cacheHelper.getCache<string>(nonceKey);
 
     // TODO: ENABLE NONCE CHECKING
     // if (!storedNonce) {
