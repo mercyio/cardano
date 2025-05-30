@@ -26,3 +26,15 @@ export class Contributor {
 }
 
 export const ContributorSchema = SchemaFactory.createForClass(Contributor);
+
+ContributorSchema.pre(/^findOne/, function (next) {
+  const preConditions = {
+    isDeleted: false,
+  };
+
+  const postConditions = this['_conditions'];
+
+  this['_conditions'] = { ...preConditions, ...postConditions };
+
+  next();
+});
