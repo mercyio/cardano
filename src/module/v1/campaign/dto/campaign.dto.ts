@@ -55,8 +55,7 @@ export class SearchCampaignDto extends PaginationDto {
 export class GetAllCampaignsDto extends PaginationDto {
   @IsOptional()
   @IsString()
-  @IsEnum(PaymentTypeEnum)
-  paymentMethod?: PaymentTypeEnum;
+  paymentMethod?: string;
 
   @IsOptional()
   @IsString()
