@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, Types, UpdateQuery } from 'mongoose';
+import mongoose, { FilterQuery, Model, Types, UpdateQuery } from 'mongoose';
 import { Campaign, CampaignDocument } from './schema/campaign.schema';
 import { RepositoryService } from '../repository/repository.service';
 import {
@@ -41,6 +41,38 @@ export class CampaignService {
       },
       populateFields: 'category',
     });
+  }
+
+  async userViewCampaigns(user: UserDocument, query: GetAllCampaignsDto) {
+    const defaultFilter: FilterQuery<CampaignDocument> = {
+      // Filter by walletAddress instead of user._id
+      walletAddress: user.walletAddress,
+    };
+
+    if (query.status) {
+      defaultFilter.status = query.status;
+    }
+
+    if (query.category) {
+      defaultFilter.category = new mongoose.Types.ObjectId(query.category);
+    }
+
+    if (query.paymentMethod) {
+      defaultFilter.paymentMethod = query.paymentMethod;
+    }
+
+    const result = await this.repositoryService.paginate({
+      model: this.campaignModel,
+      query,
+      options: defaultFilter,
+      populateFields: 'category',
+      autopopulate: false,
+    });
+
+    // Transform the result if you have a campaign transformer
+    // result.data = campaignTransformer.transformMany(result.data);
+
+    return result;
   }
 
   async allCampaigns(query: GetAllCampaignsDto) {

@@ -58,4 +58,8 @@ export class GetAllCampaignsDto extends PaginationDto {
   @IsOptional()
   @IsString()
   category?: string;
+
+  @IsOptional()
+  @IsString()
+  status?: string;
 }
