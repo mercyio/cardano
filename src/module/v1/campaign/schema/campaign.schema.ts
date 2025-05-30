@@ -5,6 +5,7 @@ import {
   Category,
   CategoryDocument,
 } from '../../category/schemas/category.schema';
+import { PaymentTypeEnum } from 'src/common/enums/payment.enum';
 
 export type CampaignDocument = Campaign & Document;
 
@@ -43,8 +44,8 @@ export class Campaign {
   @Prop({ default: null })
   walletAddress: string;
 
-  // @Prop({ enum: PaymentTypeEnum, required: true })
-  // paymentMethod: PaymentTypeEnum;
+  @Prop({ enum: PaymentTypeEnum, required: true })
+  paymentMethod: PaymentTypeEnum;
 
   @Prop({ type: [{ date: Date, message: String }], default: [] })
   updates: { date: Date; message: string }[];

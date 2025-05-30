@@ -1,6 +1,7 @@
 import { Type } from 'class-transformer';
 import {
   IsDate,
+  IsEnum,
   IsMongoId,
   IsNotEmpty,
   IsNumber,
@@ -8,6 +9,7 @@ import {
   IsString,
 } from 'class-validator';
 import { PaginationDto } from '../../repository/dto/repository.dto';
+import { PaymentTypeEnum } from 'src/common/enums/payment.enum';
 
 export class CreateCampaignDto {
   @IsMongoId()
@@ -36,12 +38,12 @@ export class CreateCampaignDto {
   @IsNotEmpty()
   endDate: string;
 
-  // @IsEnum(PaymentTypeEnum, {
-  //   message: `paymentMethod must be one of: ${Object.values(
-  //     PaymentTypeEnum,
-  //   ).join(', ')}`,
-  // })
-  // paymentMethod: PaymentTypeEnum;
+  @IsEnum(PaymentTypeEnum, {
+    message: `paymentMethod must be one of: ${Object.values(
+      PaymentTypeEnum,
+    ).join(', ')}`,
+  })
+  paymentMethod: PaymentTypeEnum;
 }
 
 export class SearchCampaignDto extends PaginationDto {
@@ -52,8 +54,12 @@ export class SearchCampaignDto extends PaginationDto {
 
 export class GetAllCampaignsDto extends PaginationDto {
   @IsOptional()
-  @IsString()
-  paymentMethod?: string;
+  @IsEnum(PaymentTypeEnum, {
+    message: `paymentMethod must be one of: ${Object.values(
+      PaymentTypeEnum,
+    ).join(', ')}`,
+  })
+  paymentMethod: PaymentTypeEnum;
 
   @IsOptional()
   @IsString()

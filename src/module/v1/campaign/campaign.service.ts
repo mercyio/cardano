@@ -30,7 +30,6 @@ export class CampaignService {
       walletAddress: user.walletAddress,
     });
   }
-
   async allCampaign(query: GetAllCampaignsDto) {
     return this.repositoryService.paginate({
       model: this.campaignModel,
