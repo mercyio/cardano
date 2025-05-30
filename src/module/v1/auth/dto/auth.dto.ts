@@ -15,9 +15,9 @@ export class WalletLoginDto {
   @IsString()
   walletAddress?: string;
 
-  // @IsOptional()
-  // @IsString()
-  // signature: string;
+  @IsOptional()
+  @IsString()
+  signature: string;
 
   @IsString()
   nonce: string;
