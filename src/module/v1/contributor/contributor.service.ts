@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { RepositoryService } from '../repository/repository.service';
@@ -6,6 +10,7 @@ import { PaginationDto } from '../repository/dto/repository.dto';
 import { Contributor, ContributorDocument } from './schema/contributor.schema';
 import { CreateContributorDto } from './dto/contributor.dto';
 import { CampaignService } from '../campaign/campaign.service';
+import { UserDocument } from '../user/schemas/user.schema';
 
 @Injectable()
 export class ContributorService {
@@ -16,7 +21,7 @@ export class ContributorService {
     private repositoryService: RepositoryService,
   ) {}
 
-  async create(payload: CreateContributorDto) {
+  async create(user: UserDocument, payload: CreateContributorDto) {
     const campaign = await this.campaignService.singleCampaign(
       payload.campaign,
     );
@@ -25,21 +30,44 @@ export class ContributorService {
       throw new NotFoundException('Campaign not found');
     }
 
-    // const alreadyContributing = await this.contributorModel.findOne({
-    //   wallet: payload.wallet,
-    //   campaign: payload.campaign,
-    // });
-
-    // if (alreadyContributing) {
-    //   return alreadyContributing;
-    // }
-
-    const contribution = await this.contributorModel.create(payload);
-    await this.campaignService.update(payload.campaign, {
-      $inc: { currentAmount: payload.amount },
+    const existingTransaction = await this.contributorModel.findOne({
+      transactionHash: payload.transactionHash,
     });
 
-    return contribution;
+    if (existingTransaction) {
+      throw new BadRequestException('Transaction hash already exists');
+    }
+
+    const alreadyContributing = await this.contributorModel.findOne({
+      wallet: user.walletAddress,
+      campaign: payload.campaign,
+    });
+
+    if (alreadyContributing) {
+      throw new BadRequestException(
+        'You have already contributed to this campaign',
+      );
+    }
+
+    try {
+      const contribution = await this.contributorModel.create({
+        campaign: payload.campaign,
+        wallet: user.walletAddress,
+        amount: payload.amount,
+        transactionHash: payload.transactionHash,
+      });
+
+      // Update campaign current amount
+      await this.campaignService.update(payload.campaign, {
+        $inc: { currentAmount: payload.amount },
+      });
+
+      await contribution.populate('campaign');
+
+      return contribution;
+    } catch (error) {
+      throw new BadRequestException('Failed to create contribution record');
+    }
   }
 
   async retrieveContributorsByCampaignId(_id: string, query: PaginationDto) {

@@ -5,16 +5,20 @@ import { RESPONSE_CONSTANT } from '../../../common/constants/response.constant';
 import { PaginationDto } from '../repository/dto/repository.dto';
 import { ContributorService } from './contributor.service';
 import { CreateContributorDto } from './dto/contributor.dto';
+import { LoggedInUserDecorator } from 'src/common/decorators/logged-in-user.decorator';
+import { UserDocument } from '../user/schemas/user.schema';
 
 @Controller('contribution')
 export class ContributorController {
   constructor(private contributorService: ContributorService) {}
 
-  @Public()
   @ResponseMessage(RESPONSE_CONSTANT.CONTRIBUTOR.CONTRIBUTOR_CREATE_SUCCESS)
   @Post()
-  async create(@Body() payload: CreateContributorDto) {
-    return await this.contributorService.create(payload);
+  async create(
+    @LoggedInUserDecorator() user: UserDocument,
+    @Body() payload: CreateContributorDto,
+  ) {
+    return await this.contributorService.create(user, payload);
   }
 
   @Public()

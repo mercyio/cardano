@@ -12,5 +12,5 @@ export class CreateContributorDto {
 
   @IsString()
   @IsNotEmpty()
-  wallet: string;
+  transactionHash: string;
 }

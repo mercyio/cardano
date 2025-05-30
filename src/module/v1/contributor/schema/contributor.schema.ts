@@ -22,6 +22,9 @@ export class Contributor {
   amount: string;
 
   @Prop()
+  wallet: string;
+
+  @Prop({ default: '' })
   transactionHash: string;
 }
 
