@@ -12,12 +12,12 @@ import { Public } from 'src/common/decorators/public.decorator';
 import { LoggedInUserDecorator } from 'src/common/decorators/logged-in-user.decorator';
 import { UserDocument } from '../user/schemas/user.schema';
 
-@Controller()
+@Controller('campaign')
 export class CampaignController {
   constructor(private campaignService: CampaignService) {}
 
   @ResponseMessage(RESPONSE_CONSTANT.CAMPAIGN.CAMPAIGN_CREATE_SUCCESS)
-  @Post('campaign')
+  @Post()
   async create(
     @LoggedInUserDecorator() user: UserDocument,
     @Body() payload: CreateCampaignDto,
@@ -26,7 +26,7 @@ export class CampaignController {
   }
 
   @Public()
-  @Get('campaign')
+  @Get('retrieve')
   async singleCampaign(@Query() { _id }: IDQueryDto) {
     return await this.campaignService.singleCampaign(_id);
   }

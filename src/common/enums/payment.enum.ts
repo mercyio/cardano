@@ -4,6 +4,7 @@ export enum PaymentProviderActionEnum {
 }
 
 export enum PaymentTypeEnum {
-  CRYPTO = 'crypto',
-  FIAT = 'fiat',
+  CRYPTO = 'CRYPTO',
+  FIAT = 'FIAT',
+  BOTH = 'BOTH',
 }
