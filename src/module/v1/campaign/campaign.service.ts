@@ -30,6 +30,7 @@ export class CampaignService {
       walletAddress: user.walletAddress,
     });
   }
+
   async allCampaign(query: GetAllCampaignsDto) {
     return this.repositoryService.paginate({
       model: this.campaignModel,
@@ -38,6 +39,7 @@ export class CampaignService {
         ...(query.category && { category: query.category }),
         ...(query.paymentMethod && { paymentMethod: query.paymentMethod }),
       },
+      populateFields: 'category',
     });
   }
 
@@ -68,7 +70,11 @@ export class CampaignService {
   }
 
   async singleCampaign(campaignId: string) {
-    return await this.campaignModel.findById(campaignId);
+    const campaign = await this.campaignModel
+      .findById(campaignId)
+      .populate('category');
+
+    return campaign;
   }
 
   async update(

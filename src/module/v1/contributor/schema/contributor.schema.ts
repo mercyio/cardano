@@ -1,11 +1,9 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { Document } from 'mongoose';
-import { PaymentTypeEnum } from 'src/common/enums/payment.enum';
 import {
   Campaign,
   CampaignDocument,
 } from '../../campaign/schema/campaign.schema';
-import { PaymentStatusEnum } from 'src/common/enums/transaction.enum';
 
 export type ContributorDocument = Contributor & Document;
 
@@ -25,12 +23,6 @@ export class Contributor {
 
   @Prop({ default: '' })
   wallet: string;
-
-  @Prop({ enum: PaymentTypeEnum, required: true })
-  paymentMethod: PaymentTypeEnum;
-
-  @Prop({ enum: PaymentStatusEnum, default: PaymentStatusEnum.Pending })
-  paymentStatus: PaymentStatusEnum;
 }
 
 export const ContributorSchema = SchemaFactory.createForClass(Contributor);

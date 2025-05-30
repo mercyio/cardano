@@ -34,7 +34,7 @@ export class CampaignController {
   @Public()
   @Get()
   async allCampaigns(@Query() query: GetAllCampaignsDto) {
-    return await this.campaignService.allCampaigns(query);
+    return await this.campaignService.allCampaign(query);
   }
 
   @Public()

@@ -1,8 +1,4 @@
-import {
-  ConflictException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { RepositoryService } from '../repository/repository.service';
@@ -21,30 +17,47 @@ export class ContributorService {
   ) {}
 
   async create(payload: CreateContributorDto) {
-    const alreadyContributing = await this.contributorModel.exists({
-      name: payload.name,
-    });
+    const campaign = await this.campaignService.singleCampaign(
+      payload.campaign,
+    );
 
-    if (alreadyContributing) {
-      throw new ConflictException(
-        'this name is  an  existing contributor for this campaign',
-      );
+    if (!campaign) {
+      throw new NotFoundException('Campaign not found');
     }
-    const contribution = await this.contributorModel.create(payload);
 
+    // const alreadyContributing = await this.contributorModel.findOne({
+    //   wallet: payload.wallet,
+    //   campaign: payload.campaign,
+    // });
+
+    // if (alreadyContributing) {
+    //   return alreadyContributing;
+    // }
+
+    const contribution = await this.contributorModel.create(payload);
     await this.campaignService.update(payload.campaign, {
       $inc: { currentAmount: payload.amount },
     });
 
     return contribution;
   }
-  async retrieveContributorsByCampaignId(_id: string) {
+
+  async retrieveContributorsByCampaignId(_id: string, query: PaginationDto) {
     const campaign = await this.campaignService.singleCampaign(_id);
 
     if (!campaign) {
       throw new NotFoundException('incorrect campaign ID');
     }
-    return await this.contributorModel.find({ campaign: _id });
+    return this.repositoryService.paginate({
+      model: this.contributorModel,
+      query,
+      options: { campaign: _id },
+      populateFields: 'campaign',
+    });
+  }
+
+  async retrieveSIngleContributor(_id: string) {
+    return await this.contributorModel.findOne({ _id: _id });
   }
 
   async allContributors(query: PaginationDto) {
