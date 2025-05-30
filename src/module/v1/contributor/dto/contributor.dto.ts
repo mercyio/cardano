@@ -1,4 +1,4 @@
-import { IsMongoId, IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsMongoId, IsNotEmpty, IsString } from 'class-validator';
 
 export class CreateContributorDto {
   @IsMongoId()
@@ -6,9 +6,9 @@ export class CreateContributorDto {
   @IsNotEmpty()
   campaign: string;
 
-  @IsNumber()
+  @IsString()
   @IsNotEmpty()
-  amount: number;
+  amount: string;
 
   @IsString()
   @IsNotEmpty()

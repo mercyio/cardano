@@ -37,6 +37,14 @@ export class CampaignController {
     return await this.campaignService.allCampaign(query);
   }
 
+  @Get('my-campaigns')
+  async userViewCampaigns(
+    @LoggedInUserDecorator() user: UserDocument,
+    @Query() query: GetAllCampaignsDto,
+  ) {
+    return await this.campaignService.userViewCampaigns(user, query);
+  }
+
   @Public()
   @Get('search')
   async searchCampaigns(@Query() query: SearchCampaignDto) {

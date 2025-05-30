@@ -21,8 +21,8 @@ export class Contributor {
   @Prop()
   amount: string;
 
-  @Prop({ default: '' })
-  wallet: string;
+  @Prop()
+  transactionHash: string;
 }
 
 export const ContributorSchema = SchemaFactory.createForClass(Contributor);
