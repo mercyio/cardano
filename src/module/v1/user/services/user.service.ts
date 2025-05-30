@@ -69,4 +69,48 @@ export class UserService {
   async findOneQuery(query: FilterQuery<UserDocument>) {
     return await this.userModel.findOne(query);
   }
+
+  // async updateProfile(
+  //   userId: string,
+  //   payload: UpdateProfileDto,
+  //   file?: Express.Multer.File,
+  // ) {
+  //   const { username } = payload;
+
+  //   if (username) {
+  //     const userWithUsernameExist = await this.userModel.findOne({
+  //       username,
+  //       _id: { $ne: userId },
+  //     });
+
+  //     if (userWithUsernameExist) {
+  //       throw new UnprocessableEntityException(
+  //         'Username already used, try another name',
+  //       );
+  //     }
+  //   }
+
+  //   let imageUrl = null;
+
+  //   if (file) {
+  //     const { mimetype, buffer } = file;
+
+  //     const awsFile: IAwsUploadFile = {
+  //       fileName: BaseHelper.generateFileName('user', mimetype),
+  //       mimetype,
+  //       buffer,
+  //     };
+
+  //     const { secureUrl } = await uploadSingleFile(awsFile);
+  //     imageUrl = secureUrl;
+  //   }
+
+  //   return await this.userModel.findByIdAndUpdate(
+  //     userId,
+  //     { ...payload, ...(imageUrl && { imageUrl }) },
+  //     {
+  //       new: true,
+  //     },
+  //   );
+  // }
 }
