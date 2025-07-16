@@ -1,59 +1,59 @@
+# 🚀 BackerBoost
+
+**BackerBoost** is a Web3-powered platform that helps project creators receive crypto-based support (aka "boosts") from their audience. It's designed for creators, open-source maintainers, and builders who want a simple way to receive contributions with wallet-based verification.
 
 ---
 
-# NestJs Project
+## ✨ Features
 
-[![StartEase](https://img.shields.io/badge/Generated%20by-StartEase-blue)](https://github.com/JC-Coder/startease)
+- 🔗 **Wallet-based Boosting** – Users can send crypto boosts directly to verified creators
+- 🛡️ **Creator Verification** – On-chain & off-chain checks to protect against impersonation
+- 📊 **Boost Dashboard** – View all boost activity and supporter stats
+- 🌐 **Project Pages** – Showcase your work and receive support in one place
+- 🔒 **Secure & Scalable API** – Built with NestJS, protected with JWT and rate-limiting
 
-## Overview
+---
 
-Welcome to your project generated using StartEase! This guide will walk you through the basic configuration steps to get your backend project up and running.
+## 🧠 Tech Stack
 
-## Prerequisites
+- **Backend:** NestJS, TypeScript, MongoDB
+- **Web3:** ethers.js, WalletConnect
+- **Infra:** Docker, GitHub Actions, Digital Ocean
 
-Before you begin, make sure you have the following prerequisites installed on your system:
+---
 
-- Node.js and npm: Download and install Node.js from [nodejs.org](https://nodejs.org/).
+## 🚧 Project Status
 
-## Installation
+BackerBoost is actively being built. Core features like creator registration, boosting, and wallet auth are live. UI dashboards and additional blockchain integrations are in progress.
 
-Install project dependencies using npm :
-   ```bash
-   npm install
-   ```
-OR
+---
 
-Install project dependencies using yarn :
-```bash
-yarn install
-```
-
-## Configuration
-
-### Environment Variables
-
-Your project relies on environment variables for configuration. To set up these variables:
-
-1. Create a `.env` file in the project root directory.
-
-2. Add the following environment variables to the `.env` file:
-
-   ```plaintext
-   APP_NAME=YourAppName
-   APP_PORT=3000
-   APP_ENV=development
-   ```
-   Note: configuration variables should be added based on config in the environment.js file.
-
-
-Replace `YourAppName`, `your-database-url`, `your-database-name`, etc., with your actual project and database information.
-
-### Start the Project
-
-Once you've configured your environment variables, you can start your project:
+## 🛠️ Setup (Backend)
 
 ```bash
+# 1. Clone the repository
+git clone https://github.com/your-username/backerboost.git
+cd backerboost
+
+# 2. Install dependencies
+npm install
+
+# 3. Setup your .env file
+cp .env.example .env
+# Fill in MongoDB URI, JWT secret, and other configs
+
+# 4. Run the development server
 npm run start:dev
-```
 
-Your backend server should now be running at http://localhost:<specified-port>.
+```
+---
+
+💡 Ideas in the Pipeline
+📜 Boost certificates (NFT-style proof of support)
+
+🔔 Notifications for new boosts
+
+💰 Multi-token support (USDC, ETH, etc.)
+
+📱 Mobile-friendly support experience
+## 🛠️ Setup (Backend)
